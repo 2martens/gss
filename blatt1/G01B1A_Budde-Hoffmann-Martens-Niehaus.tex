@@ -18,15 +18,45 @@
 % 3.1
 \subsection{}
 
-Ein Angreifermodell beschreibt einen Angreifer, gegen den ein Schutzmechanismus wirken soll. In dem Modell wird außerdem der Mechanismus beschrieben, der gegen den Angreifer wirken soll.
+\paragraph*{Was versteht man unter einem Angreifermodell und warum stellt man es auf?} ~\\
 
-Der Angreifer selber wird mithilfe von vier Kriterien beschrieben. Dies ist zum Einen die Rolle. So kann ein Angreifer Outsider oder Insider sein. Für den Fall des Insiders gibt es diverse weitere Unterteilungen, wie beispielsweise Benutzer, Betreiber, Wartungsdienst, Produzent oder Entwerfer. Diese Rollen können auch kombiniert auftreten.
+Die übergeordnete Aufgabe ist es ein (wie auch immer geartetes) gegebens System zu schützen. Eine gängige Methode dafür ist zunächst ein Angreifermodell zu entwickeln. Ein Angreifermodell ist, entsprechend dem Namen, hierbei ein Modell für mögliche Angreifer, sowie die potentielle Art und Vorgehensweise ihrer Angriffe. Aufbauend auf diesem Modell können nun Schutzmaßnahmen für das System entwickelt und implementiert werden. Daraus resultiert, dass das Angreifermodell die maximale Wirksamtkeit gegen Angriffe für einen darauf Aufbauenden Schutzmechanismus definiert.
 
-Außerdem wird die Verbreitung des Angreifers berücksichtigt. Die beschreibt die Stellen im System, an denen der Angreifer Informationen gewinnen oder Systemzustände verändern kann.
+\paragraph*{Welche, einen Angreifer beschreibenden, Kriterien (inkl. konkreter Ausprägung) werden in einem Angreifermodell berücksichtigt?} ~\\
 
-Desweiteren wird das Verhalten des Angreifers erwähnt. Ein Angreifer kann entweder passiv oder aktiv, beziehungsweise beobachtend oder verändernd sein.
+Der Angreifer selber wird mithilfe von vier Kriterien beschrieben.
 
-Schließlich wird die Rechenkapazität des Angreifers in Betracht gezogen, die entweder unbeschränkt oder beschränkt sein kann. Ist sie unbeschränkt, so ist der Mechanismus, der gegen den Angreifer gerade noch wirkt, informationstheoretisch interessant. Wenn die Rechenkapazität beschränkt ist, so handelt es sich um einen komplexitätstheoretischen Mechanismus.
+\begin{description}
+	\item[Rolle:] Hier wird die Rolle beschrieben, die der Angreifer in Bezug zum angegriffenen System hat. Sie ist unter anderem von den zur Verfügung stehenden Zeit- und Geldresourcen des Angreifers abhängig. Es kann konkret unterschieden werden in:
+	
+	\begin{description}
+		\item[Outsider:] Ein Außenstehender, welcher unter regulären Umständen nicht mit dem System in Kontakt kommt. Dies kann etwa ein angeheuerter Wirtschaftsspion oder ein Hacker, welcher durch Zufall auf eine Sicherheitslücke gestoßen ist, sein.
+		\item[Insider:] Jemand der sich regelmäßig im Umfeld des Systems bewegt, wie zum Beispiel Benutzer, Betreiber, Wartungsdienst, Produzenten, Entwerfer, etc. Natürlich gibt es noch mehr Möglichkeiten, als die oben genannten konkreten Beispiele (etwa Kombinationen von ihnen), die hier jedoch aus Platzgründen nicht aufgezählt werden können.
+	\end{description}
+	\item[Verbreitung:] Unter der Verbreitung des Angreifers versteht man die Stellen im System, an denen der Angreifer Informationen gewinnen oder Systemzustände verändern kann. Auch hier sind verschiedene Ausprägungen denkbar, die nicht alle aufgelistet werden können. Beispiele sind Verbindungen zum Internet, unbeaufsichtigte Arbeitsplätze, ungesicherte Datenträger, etc.
+	\item[Verhalten:] Allgemein wird in aktives, passives, beobachtendes und veränderndes Verhalten unterteilt. Die Folgende Tabelle stellt zur Veranschaulichung die möglichen Kombination der Verhaltensweisen dar. In der Legende befinden sich mögliche (wieder aus Platzgründen nicht alle) Beispiele.
+
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			& Aktiv & Passiv \\ \hline
+			Beobachtend & a) & b) \\ \hline
+			Verändernd & c) & $\emptyset$ \\ \hline
+		\end{tabular}
+	\end{center} 
+
+	\begin{enumerate}
+		\item über legitimierten Zugang Informationen Sammeln (etwa bei einer 	Wartung),\dots
+		\item Lauschangriff, Verkehrsflussanalyse,\dots
+		\item Verändern von Daten, Einfügen von Daten, Dienstverweigerung 	erzeugen,\dots
+	\end{enumerate}
+
+	\item[Rechenkapazität:] Die Rechenkapazität des Angreifers kann wird in zwei Kategorien unterteilt. Sie ist (zumindest im beschränkten Fall) von den Zeit- und Geldresourcen des Angreifers abhängig.
+	\begin{description}
+		\item[Beschränkt:] Ein komplexitätstheoretisches Problem. Konkret können nach heutigem Stand der Technik etwa einige Verschlüsselungen nur mit hohem Rechenaufwand geknackt werden, was entweder lange Rechenzeiten oder hohe Rechenkapazitäten des Angreifers bedingt.
+		\item[Unbeschränkt:] Ein Informationstheoretisches Problem. Die oben genannten verfahren sind in der Zukunft evtl. durch Quantencomputer ohne Probleme lösbar. 
+	\end{description}
+\end{description}
 
 %\input{betriebssysteme}
 
