@@ -1,0 +1,44 @@
+\documentclass[ngerman]{fbi-aufgabenblatt}
+
+% Folgende Angaben bitte Anpassen !!!
+
+\renewcommand{\Aufgabenblatt}{1}
+\renewcommand{\Gruppe}{G03}
+\renewcommand{\KleinGruppe}{A}
+\renewcommand{\Teilnehmer}{Budde, Helms, Hoffmann, Martens, Niehaus}
+
+\begin{document}
+
+% solange Aufgaben 1 und 2 nicht bearbeitet wurden
+% täuscht LaTex vor, dass bereits Section 1 und 2 gesetzt wurden (Aufgabe=Section)
+%\setcounter{section}{2}
+
+\aufgabe{Grundlagen von Betriebssystemen}
+
+% 1.a
+
+\begin{enumerate}
+	\item Eine Grundaufgabe eines Betriebssystems (BS) ist die Vermittlung zwischen Hard- und Software. Das BS koordiniert dabei über Treiber die Hardware und die Software kann über entsprechende Schnittstellen universell darauf zugreifen.
+	Die zweite Grundaufgabe eines BS ist die Vermittlung zwischen Programmen. Mehrere Programme können sich in einem Deadlock befinden, welcher nur durch das BS lösbar ist.
+	
+	\item Das BS als Vermittler zwischen Programmen muss sich konkret darum kümmern, dass
+	\begin{itemize}
+		\item Programme nicht in einen Deadlock geraten und dass
+		\item Programme nicht auf die selben Dateien bzw. auf den Speicherbereich von anderen Programmen zugreifen (Ausnahmen gibt es natürlich z.B. bei Virenscannern) können.
+	\end{itemize}
+	Das BS als Vermittler zwischen Hard- und Software muss sich konkret
+darum kümmern, dass
+	\begin{itemize}
+		\item Programme Ton wiedergeben lassen können ohne konkrete Kenntnisse über die verwendete Hardware zu haben (Treiberverwaltung) und dass
+		\item Hardware die angeschlossen wird (z.B. via USB) direkt der Software zur Verfügung steht.
+	\end{itemize}
+\end{enumerate}
+
+\aufgabe{Prozesse und Threads}
+
+\begin{enumerate}
+	\item Ein Programm ist eine Folge von Anweisungen zur Bearbeitung von Daten oder der Lösung eines Problems.
+\end{enumerate}
+%\input{betriebssysteme}
+
+\end{document}
