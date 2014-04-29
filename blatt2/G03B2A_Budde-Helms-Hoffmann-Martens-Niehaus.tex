@@ -37,7 +37,25 @@ darum kümmern, dass
 \aufgabe{Prozesse und Threads}
 
 \begin{enumerate}
-	\item Ein Programm ist eine Folge von Anweisungen zur Bearbeitung von Daten oder der Lösung eines Problems.
+	\item Ein Programm ist eine Folge von Anweisungen zur Bearbeitung von Daten oder der Lösung eines Problems. Die Ausführungsreihenfolge in der Abarbeitung wird durch den Thread gesteuert welcher Teil eines Prozesses, der algotithmisch ablaufenden Informationsverarbeitung, ist. In Betriebsystemen is dies der Vorgang der durch ein Programm kontrolliert wird, welches zur Ausführung einen Prozessor benötigt.
+	\item Ein Thread besitzt nur den eigenen Stapelspeicher.
+	\setcounter{enumi}{3}
+	\item 
+	\begin{description} 
+		\item[X = bereit] Der Prozess besitzt alle benötigten Betriebsmittel (bis auf den Prozessor(kern)) und wartet auf seine weitere Ausführung.
+		\item[Y = rechnend] Der Prozess ist aktuell einem Prozessor(kern) zugeordnet und läuft auf diesem ab.
+		\item[Z = blockiert] Der Prozess wurde unterbrochen und wartet auf eine nicht-Prozessorkern-Ressource. Wenn die Zuteilung erfolgt ist, wird er zunächst wieder in den Zustand \textbf{bereit} versetzt.
+		\renewcommand{\theenumii}{\alph{enumii} =}
+		\begin{enumerate}
+   			\item Prozesseinstieg
+   			\item Scheduler wählt diesen Prozess
+   			\item Prozess blockiert wegen der Eingabe
+   			\item Eingabe ist vorhanden
+   			\item Scheduler wählt einen anderen Prozess
+   			\item Prozessende
+   		\end{enumerate}
+	Der Scheduler ist eine Arbitrationslogik, die die zeitliche Ausführung mehrerer Prozesse in Betriebsystemen regelt.
+	\end{description}
 \end{enumerate}
 %\input{betriebssysteme}
 
