@@ -1,0 +1,56 @@
+\documentclass[ngerman]{fbi-aufgabenblatt}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{paralist}
+
+% Folgende Angaben bitte Anpassen !!!
+
+\renewcommand{\Aufgabenblatt}{3}
+\renewcommand{\Gruppe}{G04}
+\renewcommand{\KleinGruppe}{A}
+\renewcommand{\Teilnehmer}{Budde, Helms, Hoffmann, Martens, Niehaus}
+
+\begin{document}
+
+% solange Aufgaben 1 und 2 nicht bearbeitet wurden
+% täuscht LaTex vor, dass bereits Section 1 und 2 gesetzt wurden (Aufgabe=Section)
+%\setcounter{section}{2}
+
+\aufgabe{Rechnersicherheit}
+
+	\subsection{Zugangs- und Zugriffskontrolle}
+	
+	\begin{enumerate}
+		\item
+		Zugangskontrolle: 
+		\begin{itemize}
+			\item nur mit berechtigten Partnern weiter kommunizieren
+			\item verhindern von unbefugter Inanspruchnahme von Betriebsmitteln
+		\end{itemize}
+		Zugriffskontrolle: 
+		\begin{itemize}
+			\item Ausführen von Operation auf Objekt nur möglich, wenn das Subjekt das Recht dazu hat.
+		\end{itemize}
+
+		\item
+		Es ist sinnvoll ein System nur mit einer Zugangskontrolle auszustatten. Dies kann zum Beispiel dann eingesetzt werden, wenn alle Personen, die durch die Zugangskontrolle kommen, Zugriff haben sollen. Konkret ist dies beispielsweise bei den Gedächtnisprotokollen der Fachschaft Informatik der Fall. Die Zugangskontrolle besteht darin, dass nur IP-Adressen aus dem Bereich der Informatik sich die Protokolle ansehen können. Besitzt man jedoch eine dieser Adressen, dann gibt es keine weiteren Einschränkungen.
+		
+		\item 
+		Die Zugriffskontrolle setzt die Zugangskontrolle voraus, da im Rahmen der Zugangskontrolle eine Identifikation der Person stattfindet. Ohne diese Identifikation kann nicht geprüft werden, ob eine Person überhaupt rechtmäßig zugreifen kann. Ein simples Beispiel dazu sind Forensysteme. Auch wenn man ein Konto besitzt, so hat man als Gast nicht die Rechte eines angemeldeten Nutzers, denn das System kann einen nicht eindeutig identifizieren und mit den Rechtetabellen abgleichen.
+		Sobald man jedoch angemeldet ist, kann man vom System eindeutig identifiziert werden (über Benutzernamen und/oder E-Mail-Adresse) und ein Rechteabgleich ist daher möglich.
+		
+		\item
+		Die Zugangskontrolle wird hier durch den Benutzer, der den Link weitergibt, durchgeführt. Wenn er einer Person nicht vertraut, wird er dieser nicht den Link geben. Theoretisch lässt sich dies auch transitiv fortsetzen. Der bewusste Akt der Weitergabe des Links entspricht der Zugangskontrolle. Jeder kann somit mit Kenntnis des Links auf den Ordner zugreifen. Eine Zugriffskontrolle findet nicht statt.
+		
+		Wird der Ordner jedoch freigegeben, dann erlaubt der Link keinen Zugang zum Ordner, sondern ermöglicht es lediglich sich den Zugriff zum Ordner über einen eigenen Account zu sichern. Die Zugangskontrolle findet hierbei durch den Login statt und die Zugriffskontrolle durch die Berechtigung in Form der Freigabe.
+	\end{enumerate}
+	
+\newpage 
+\aufgabe{Timing-Attack}
+
+	\subsection{}
+	
+	
+
+\end{document}
