@@ -4,6 +4,24 @@
 \usepackage{amssymb}
 \usepackage{paralist}
 
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       % keyword style
+  stringstyle=\color{mymauve},     % string literal style
+}
+
 % Folgende Angaben bitte Anpassen !!!
 
 \renewcommand{\Aufgabenblatt}{3}
@@ -49,8 +67,75 @@
 \newpage 
 \aufgabe{Timing-Attack}
 
+	\texttt{Quelltext auch Online: https://gist.github.com/lino/7b685327bd779e9366ce}
+
+	\lstinputlisting[language=Java]{code/src/TimingAttack.java}
+
 	\subsection{}
+	Siehe Quelltext
+
+	\subsection{}
+
+	Ein Timing-Angriff ist möglich, da sich die Laufzeit in 2 wichtigen Parametern des eingegebenen Passworts im Vergleich zum korrekten Passwort ändert:
 	
-	
+	\begin{itemize}
+		\item[i)] Hat ein eingegebenes Passwort die gleiche Länge, wie das erwartete korrekte Passwort, so werden die ersten beiden Passwortziffern verglichen. Ist dem nicht so gibt es sofort einen Return, die Laufzeit ist kürzer.
+		\item[ii)] Mit jeder (von links aus gezählten) aufeinanderfolgenden korrekten Ziffer im Eingabepasswort wird ein weiterer Vergleich von der darauffolgenden Ziffer garantiert, also die Laufzeit verlängert.
+	\end{itemize}
+
+	\subsection{}
+
+	Nach den in 2.2 beschriebenen Mechanismen der Laufzeitverlängerung bietet sich folgendes Vorgehen an:
+
+	\begin{itemize}
+		\item[i)] Man ermittelt die korrekte Passwortlänge. Hierzu wählt man ein beliebiges Zeichen, etwa $0$. Zuerst testet man das leere Passwort und erhöht dann, mit dem gewählten Zeichen solange die Länge des eingegebenen Passworts, bis ein signifikanter Laufzeitunterschied (Verlängerung) zur Vorgängereingabe erkannt wird. Denn nun wird mindestens die erste Eingabeziffer mit dem Korrekten Passwort abgeglichen.
+		
+		\item[ii)] Ist die Länge bekannt probiert man, in beliebiger Reihenfolge in der ersten Passwortziffer solange alle möglichen Eingaben aus, bis ein signifikanter Laufzeitunterschied festgestellt werden kann. Die Eingabe mit der längeren Laufzeit wird gewählt (ggf. kann ja auch die erste gewählte Eingabe hier $0$ korrekt sein).\\
+Dieser Schritt wird für jede Passwortziffer wiederholt, bis alle Ziffern bekannt sind.
+	\end{itemize}
+
+	\newpage
+
+	\subsection{}
+
+	Beim TimingSafePasswordChecker wird auch bei unterschiedlichen Arraylängen stets eine bei gleichbleibender Passwort konstante Laufzeit angestrebt. Hierdurch sind Timingangriffe erschwert, auch wenn Zufallstreffer weiterhin möglich sind.
+
+	Ausgabe des Vergleichs:
+
+	\lstinputlisting[language=Java]{output.txt}
+
+\aufgabe{Real-World Brute-Force Angriff}
+
+	Zur Begutachtung des Sicherheitscodes wurden einige Test-PDFs\footnote{Beitrittserklärungen zum Chaos Computer Club e.V.} hochgeladen. Die zurückgegebenen Sicherheitscodes waren
+
+	\begin{itemize}
+		\item{\texttt{GSS14-DEMO-FDJL6-SL6JR-AN4KF-H74FL}}
+		\item{\texttt{GSS14-DEMO-XAKEQ-LYYG9-3FRQX-CFPC6}}
+		\item{\texttt{GSS14-DEMO-HM94M-THYZJ-H7FRD-QKHSA}}
+		\end{itemize}
+
+	Der Sicherheitscode hat eine statische Länge von 34 Zeichen. Der Prefix \texttt{GSS14-DEMO-} ist statisch, bleiben 23 Zeichen. Die drei Trennstriche sind ebenfalls statisch, bleiben 20 Zeichen. 
+
+	Es werden lediglich Großbuchstaben ohne Umlaute und Zahlen verwendet, sodass unser Alphabet aus 36 Zeichen besteht.
+
+	\begin{align*}
+		\Sigma = \left\{A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9\right\}
+	\end{align*}
+
+	Da schon in den drei Testcodes einzelne Zeichen doppelt vorkommen, lässt sich die Anzahl der möglichen Kombinationen durch ein Urnenmodell mit sortierter Ziehung mit Zurücklegen abbilden. Die Anzahl der möglichen Kombinationen aus $N$ Zahlen und $n$ Stellen ist mit $N^n$ definiert. Folglich gibt es
+
+	\begin{align*}
+		36^{20} = 1.3367*10^{31}
+	\end{align*}
+
+	Möglichkeiten. Bei 1000 Anfragen pro Sekunde könnte man im Schlimmsten Fall $1.3367*10^{28}$ Sekunden bzw. $4.2388*10^{17}$ Jahrtausende warten bis die gewünschte Kombination gefunden ist. Um einen Mittleren Wert zu finden, betrachten wir den Einbruchversuch als Bernoulli-Versuch. Derzeit gibt es 25 Abgaben, also 25 gütlige Schlüssel im System. Die Wahrscheinlichkeit einen Schlüssel zufällig zu erraten wäre $1.8702*10^{-30}$. 
+
+	Die Anzahl der Versuche um in 50\% der Fälle einen von 25 Schlüsseln zu finden sei $n$
+
+	\begin{align*}
+		0.5 = n*\frac{25}{36^{20}}*(1-\frac{25}{36^{20}})^{n-1}
+	\end{align*}
+
+	Durch umstellen lässt sich ermitteln, dass n unendlich groß ist.
 
 \end{document}

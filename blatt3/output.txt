@@ -1,0 +1,6 @@
+****
+GSS Timing Attack suite with OriginalPasswordChecker
+9474 of 10000 timing attacks successful: 94.74000000000001%
+****
+GSS Timing Attack suite with TimingSafePasswordChecker
+4 of 10000 timing attacks successful: 0.04%
