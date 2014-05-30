@@ -7,6 +7,7 @@
 
 \usepackage{listings}
 \usepackage{color}
+\usepackage{textcomp}
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -86,7 +87,6 @@
 	\bgblock{23}{25}{$P_5$}
 	\bgblock{26}{27}{$P_2$}
 	\bgblock{28}{32}{$P_5$}
-
 \end{blockgraph}
 
 \item \color{white}.\color{black}\\
@@ -99,7 +99,6 @@
 	\bglabelxx{20}
 	\bglabelxx{25}
 	\bglabelxx{30}
-
 	% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
 	%    Y-Position (z.B. CPU), optional
 	%    Beginn auf der X-Achse
@@ -124,23 +123,26 @@
     1c 				&  23  & 20 & 7 & 9  & 22 & 16,2 \\\hline
  \end{tabular}
 
-\item Große $\Delta t$ haben den Vorteil das der Overhead im vergleich zu
+\item Große $\Delta t$ haben den Vorteil das der Overhead im Vergleich zu
 kleinen $\Delta t$ geringer ist, da seltener zwischen Prozessen gewechselt werden muss.
 Kleine $\Delta t$ haben den Vorteil das Prozesse die nur wenige CPU-Zyklen benötigen
-schneller bearbeitet werden müssen, da die Antwortzeiten geringe sind.
+schneller bearbeitet werden, da die Antwortzeiten geringer sind.
 
 \end{enumerate}
 
 \aufgabe{Echtzeit \& Mehrprozessor-Scheduling}
 
 \begin{enumerate}
-	\item
-	todo
+	\item Für $i \in \{1,2,3\}$ sind die Aufträge $A_i$ mit Periodendauern $p_i = \{(4),(7),(3)\}$ und Bedienzeitforderungen $b_i = \{(1),(3),(1)\}$ gegeben. 
+	Zu zeigen ist, dass es selbst mit einem idealen Scheduler (kein Overhead) nicht möglich ist alle Deadlines einzuhalten.
+	Aus den Perioden $p_i$ ergibt sich, dass für die Einhaltung aller Deadlines ein periodischer Zyklus aus
+	kgV\footnote{kleinstes gemeinsames vielfaches}$(7,4,3) = 84$ Takten existieren müsste. In diesen 84 Takten müsste
+	$A_1$ 21 mal einen Takt, $A_2$ 12 mal drei Takte und $A_3$ 28 mal einen Takt belegen. Es sind also
+	insgesamt $21 + 28 + (3\cdot 12) = 85$ Takte nötig. Dies ist offenkundig nicht möglich, unabhängig von der Qualität des Schedulers.
 	\item
 	\begin{enumerate}
 	
-	\item 
-	$ $\\
+	\item Earliest Deadline First:\\
 	\begin{blockgraph}{28}{1}{0.4}
 		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
 		\bglabelxx{0}
@@ -174,20 +176,222 @@ schneller bearbeitet werden müssen, da die Antwortzeiten geringe sind.
 		\bgblock{24}{27}{$B_1$}
 	
 	\end{blockgraph}
+
+ \newpage
+ 
+	\item Rate Monotonic Scheduling (Je kürzer die Periodendauer desto höher die Priorität):\\
+	\begin{blockgraph}{26}{1}{0.4}
+		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
+		\bglabelxx{0}
+		\bglabelxx{4}
+		\bglabelxx{7}
+		\bglabelxx{8}
+		\bglabelxx{9}
+		\bglabelxx{11}
+		\bglabelxx{12}
+		\bglabelxx{14}
+		\bglabelxx{16}
+		\bglabelxx{18}
+		\bglabelxx{20}
+		\bglabelxx{21}
+		\bglabelxx{22}
+		\bglabelxx{24}
+
+		% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
+		%    Y-Position (z.B. CPU), optional
+		%    Beginn auf der X-Achse
+		%    Ende auf der X-Achse
+		%    Beschriftung
+		%---- B4 (1 Takt alle 4) hat höchste Prio ----
+		\bgblock{0}{1}{$B_4$}
+		\bgblock{4}{5}{$B_4$}
+		\bgblock{8}{9}{$B_4$}
+		\bgblock{12}{13}{$B_4$}
+		\bgblock{16}{17}{$B_4$}
+		\bgblock{20}{21}{$B_4$}
+		\bgblock{24}{25}{$B_4$}
+		%---- Wenn B4 bedient hat B1 (3 Takte alle 7) Prio ----
+		\bgblock{1}{4}{$B_1$}
+		\bgblock{7}{8}{$B_1$}
+		\bgblock{9}{11}{$B_1$}
+		\bgblock{14}{16}{$B_1$}
+		\bgblock{17}{18}{$B_1$}
+		\bgblock{21}{24}{$B_1$}
+		%---- dann hat B3 (2 Takte alle 9) Prio ----
+		\bgblock{5}{7}{$B_3$}
+		\bgblock{11}{12}{$B_3$}
+		\bgblock{13}{14}{$B_3$}
+		\bgblock{18}{20}{$B_3$}
 	
-	\item
-	todo
+	\end{blockgraph}
+	
+	Wie leicht zu sehen ist wird $B_2$ nicht abgearbeitet. \\
+	Die CPU Auslastung für die gegeben Werte ist $\frac 37 + \frac 1{11} + \frac 29 + \frac 14 \approx 99\%$\\
+	Die kleinste obere Schranke bei 4 Aufträgen ist allerdings $4 \cdot \left(2^{\frac14}-1\right) \approx 0,76$. Es war
+	daher auch nicht zu erwarten das ein Scheduling möglich ist.
+	
 	\end{enumerate}
 	
-	\item
-	todo
+	\item Load Sharing nach Prioritäten bei 7 Prozessen $P_1,\ldots,P_7$ auf 4 CPU-Kernen $CPU_0,\ldots,CPU_3$: \\
+	\begin{blockgraph}{16}{4}{0.7}
+		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
+		\bglabelxx{0}
+		\bglabelxx{5}
+		\bglabelxx{10}
+		\bglabelxx{15}
+		%\bglabely{Zeile}{Beschriftung} erzeugt die Beschriftung der Y-Achse, unterste Zeile ist {0}
+		\bglabely{0}{$CPU_0$} 
+		\bglabely{1}{$CPU_1$} 
+		\bglabely{2}{$CPU_2$} 
+		\bglabely{3}{$CPU_3$} 
+
+		% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
+		%    Y-Position (z.B. CPU), optional
+		%    Beginn auf der X-Achse
+		%    Ende auf der X-Achse
+		%    Beschriftung
+		\bgblock[0]{0}{4}{$P_1$}
+		\bgblock[1]{2}{7}{$P_3$}
+		\bgblock[2]{2}{3}{$P_2$}
+		\bgblock[3]{3}{11}{$P_4$}
+		\bgblock[2]{3}{11}{$P_5$}
+		\bgblock[0]{4}{5}{$P_2$}
+		\bgblock[0]{5}{10}{$P_6$}
+		\bgblock[1]{7}{11}{$P_2$}
+		\bgblock[0]{10}{14}{$P_7$}
+	\end{blockgraph}
 \end{enumerate}
 
 \aufgabe{Prioriätsinversion}
 
 \begin{enumerate}
-	\item
-	todo
+	\item Mars-Pathfinder-Mission:\\
+	\begin{blockgraph}{52}{1}{0.3}
+		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
+		\bglabelx{0}{000}
+		\bglabelx{10}{010}
+		\bglabelx{20}{020}
+		\bglabelx{30}{030}
+		\bglabelx{40}{040}
+		\bglabelx{50}{050}
+		%\bglabely{Zeile}{Beschriftung} erzeugt die Beschriftung der Y-Achse, unterste Zeile ist {0} 
+
+		% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
+		%    Y-Position (z.B. CPU), optional
+		%    Beginn auf der X-Achse
+		%    Ende auf der X-Achse
+		%    Beschriftung
+		\bgblock{0}{10}{$B$}
+		\bgblock{10}{30}{$Z$}
+		\bgblock{30}{52}{$M$}
+	\end{blockgraph}
+		\begin{blockgraph}{52}{1}{0.3}
+		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
+		\bglabelx{0}{050}
+		\bglabelx{10}{060}
+		\bglabelx{20}{070}
+		\bglabelx{30}{080}
+		\bglabelx{40}{090}
+		\bglabelx{50}{100}
+		%\bglabely{Zeile}{Beschriftung} erzeugt die Beschriftung der Y-Achse, unterste Zeile ist {0} 
+
+		% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
+		%    Y-Position (z.B. CPU), optional
+		%    Beginn auf der X-Achse
+		%    Ende auf der X-Achse
+		%    Beschriftung
+		\bgblock{0}{10}{$M$}
+		\bgblock{10}{20}{$B$}
+		\bgblock{20}{30}{$Z$}
+		\bgblock{30}{40}{$B$}
+		\bgblock{40}{50}{$Z$}
+	\end{blockgraph}
+	\begin{blockgraph}{52}{1}{0.3}
+		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
+		\bglabelx{0}{100}
+		\bglabelx{10}{110}
+		\bglabelx{20}{120}
+		\bglabelx{30}{130}
+		\bglabelx{40}{140}
+		\bglabelx{50}{150}
+		%\bglabely{Zeile}{Beschriftung} erzeugt die Beschriftung der Y-Achse, unterste Zeile ist {0} 
+
+		% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
+		%    Y-Position (z.B. CPU), optional
+		%    Beginn auf der X-Achse
+		%    Ende auf der X-Achse
+		%    Beschriftung
+		\bgblock{15}{20}{$M$}
+		\bgblock{20}{40}{$Z$}
+		\bgblock{40}{52}{$M$}
+	\end{blockgraph}
+	\begin{blockgraph}{32}{1}{0.3}
+		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
+		\bglabelx{0}{150}
+		\bglabelx{10}{160}
+		\bglabelx{20}{170}
+		%\bglabely{Zeile}{Beschriftung} erzeugt die Beschriftung der Y-Achse, unterste Zeile ist {0} 
+
+		% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
+		%    Y-Position (z.B. CPU), optional
+		%    Beginn auf der X-Achse
+		%    Ende auf der X-Achse
+		%    Beschriftung
+		\bgblock{0}{15}{$M$}
+		\bgblock[1]{10}{32}{$W$}
+	\end{blockgraph}\\
+	Wobei $W$ den Watchdog darstellt der für einen Neustart sorgt, da $B$ in der Periode 120-160 nicht ausgeführt werden konnte.
+	
+	Dies liegt daran, dass $M$ die für $B$ nötigen Resourcen mittels Semaphore sperrt, aber von $Z$ aufgrund der höheren
+	Priorität verdrängt wird. $B$ kann also $M$ nicht verdrängen. Weiter gibt $M$ aufgrund der Verdrängung durch $Z$
+	die für $B$ nötigen Resourcen zu spät frei. Somit kann $B$ nicht mehr rechtzeitig ausgeführt werden.
+	\item Prioriätsinversion beschreibt die Umkehrung von Prioritäten. Obwohl $B$ höhere Priorität als $M$ hat, muss $B$ auf die
+	Freigabe von gemeinsam genutzten Resourcen warten. Diese Freigabe kann nur am Ende der Bedienzeit von $M$ erfolgen. Somit hat
+	$M$ effektiv eine höhere Priorität als $B$.
+	
+	\newpage
+	
+	\item Die Lösung war eine Art Prioritätsvererbung. Wenn ein Task mit niedriger Priorität die selben Resourcen nutzt wie ein Task
+	mit höherer Priorität, wird für beide die hohe Priorität vergeben.\footnote{vgl. https:\textfractionsolidus\textfractionsolidus research.microsoft.com\textfractionsolidus en-us\textfractionsolidus um\textfractionsolidus people\textfractionsolidus mbj\textfractionsolidus Mars\_Pathfinder\/Mars\_Pathfinder.html} 
+	%https://research.microsoft.com/en-us/um/people/mbj/Mars_Pathfinder/Mars_Pathfinder.html
+	Mit dieser Konfigurationsoption von VxWworks (dem verwendeten
+	Betriebssystem), kann $M$ nicht mehr von $Z$ verdrängt werden und es ergibt sich folgender Ablauf (Auszug):\\
+	
+	\begin{blockgraph}{52}{1}{0.3}
+		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
+		\bglabelx{0}{100}
+		\bglabelx{10}{110}
+		\bglabelx{20}{120}
+		\bglabelx{30}{130}
+		\bglabelx{40}{140}
+		\bglabelx{50}{150}
+		%\bglabely{Zeile}{Beschriftung} erzeugt die Beschriftung der Y-Achse, unterste Zeile ist {0} 
+
+		% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
+		%    Y-Position (z.B. CPU), optional
+		%    Beginn auf der X-Achse
+		%    Ende auf der X-Achse
+		%    Beschriftung
+		\bgblock{15}{45}{$M$}
+		\bgblock{45}{52}{$B$}
+	\end{blockgraph}
+	\begin{blockgraph}{32}{1}{0.3}
+		% \bglabelxx erzeut Beschriftung der X-Achse an bestimmter Position
+		\bglabelx{0}{150}
+		\bglabelx{10}{160}
+		\bglabelx{20}{170}
+		%\bglabely{Zeile}{Beschriftung} erzeugt die Beschriftung der Y-Achse, unterste Zeile ist {0} 
+
+		% \bgblock erzeugt Block innerhalb des Graphen. Parameter:
+		%    Y-Position (z.B. CPU), optional
+		%    Beginn auf der X-Achse
+		%    Ende auf der X-Achse
+		%    Beschriftung
+		\bgblock{0}{5}{$B$}
+		\bgblock{5}{10}{$Z$}
+		\bgblock{10}{20}{$B$}
+		\bgblock{20}{32}{$Z$}
+	\end{blockgraph}
 \end{enumerate}
 
 \end{document}
