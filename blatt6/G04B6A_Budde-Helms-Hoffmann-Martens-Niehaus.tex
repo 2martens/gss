@@ -1,0 +1,209 @@
+\documentclass[ngerman]{fbi-aufgabenblatt}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{paralist}
+%\usepackage{blockgraph}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       % keyword style
+  stringstyle=\color{mymauve},     % string literal style
+}
+
+% Folgende Angaben bitte Anpassen !!!
+
+\renewcommand{\Aufgabenblatt}{6}
+\renewcommand{\Gruppe}{G04}
+\renewcommand{\KleinGruppe}{A}
+\renewcommand{\Teilnehmer}{Budde, Helms, Hoffmann, Martens, Niehaus}
+
+\begin{document}
+
+\aufgabe{Speicherverwaltung}
+
+\subsection{Wie groß ist eine Seite?}
+
+Bei 16-bit virtuellen Adressen ($\hat =$ 64 KiB) und 16 Seiten ist eine Seite entsprechend 4 KiB groß.
+
+\subsection{typischer Seitentabelleneintrag}
+
+Nach Tanenbaum\footnote{Andrew S. Tanenbaum, Modern Operating Systems, 3rd Edition, 3.3.2 Structure of a Page Table Entry}
+besteht eine typische Seitentabelle aus:
+\begin{itemize}
+ \item Page Frame Number - welche die jeweilige Seite eindeutig bestimmt.
+ \item ein Present/absent bit - welches Angibt ob die Seite z.Zt im Speicher liegt oder ausgelagert wurde.
+ \item Protection bit(s) - ein oder mehrere bit(s), welche einfache (rw) oder komplexere (rwx) Zugriffsrechte regeln.
+ \item Modified and Referenced bits - welche die Nutzung der Seite dokumentieren. Z.B. wird bei einer Änderung das
+ Modified bit gesetzt um festzustellen ob die Seite zurück auf die Festplatte geschrieben werden muss oder verworfen werden kann.\\
+ Das Referenced bit gibt an ob eine Reference auf diese Seite gehalten wird. Dies ermöglicht dem Betriebssystem bessere Entscheidungen
+ bei einem Pagefault\footnote{Seite befindet sich z.Zt. nicht im Arbeitsspeicher.} zu treffen.
+ \item Caching bit - gibt an ob Puffern für diese Seite erlaubt ist. Dies kann wichtig sein wenn die Seite etwas anderes als den
+ Arbeitsspeicher referenziert, z.B. eine Festplatte oder ein Bandlaufwerk.
+\end{itemize}
+
+%Die optimale Seitengröße kann nach Tanenbaum\footnote{Andrew S. Tanenbaum, Modern Operating Systems, 3rd Edition, pg. 220} durch $$p = \sqrt{2se}$$
+%ermittelt werden. Wobei $s:=$ Durchschnittliche Prozessgröße und $e:=$ benötigter Speicher pro Seite in der Seitentabelle.
+
+\subsection{welche physikalische Adresse?}
+
+\subsubitem{i)} \texttt{0x5fe8} $=24.552$ liegt im Bereich 5 (20.480 bis 24.575) \\
+dort ist der Pageframe $001_2 = 1$ angegeben. \\
+Wir mappen also auf $1 \cdot 4096 + (24.552 - 20.480) = 8.169 =$ \texttt{0x1fe8}
+\subsubitem{ii)} \texttt{0xfeee} $= 65.262$ liegt im Bereich 15 (61.440 bis 65.535)\\
+dort ist der Pageframe $000_2 = 0$ angegeben, aber das Present Bit ist nicht gesetzt.\\
+Die entsprechende Seite muss also erst in den Arbeitsspeicher geladen werden.
+\subsubitem{iii)} \texttt{0xa470} $=42.096$ liegt im Bereich 10 (40.960 bis 45.055) \\
+dort ist der Pageframe $000_2 = 0$ angegeben. \\
+Wir mappen also auf $0 \cdot 4096 + (42.096 - 40.960) = 1.136 =$ \texttt{0x0470}
+\subsubitem{iv)} \texttt{0x0101} $=257$ liegt im Bereicht 0 (0 bis 4.095) \\
+dort ist der Pageframe $101_2 = 5$ angegeben. \\
+Wir mappen also auf $5 \cdot 4096 + (257 - 0) = 20737 = $ \texttt{0x5101}
+
+
+\subsection{optimale Seitengröße I}
+
+Für kleine Seiten spricht:
+\begin{itemize}
+ \item Zufällig gewählte Daten passen in der Regel nicht genau in ganzzahlige Seiten.
+ Im Schnitt bleibt die Hälfte der letzten Seite leer und ist entsprechend verschwendet.
+ Dies nennt man interne Fragmentierung. Bei $n$ Bereichen im Arbeitsspeicher und $p$ byte 
+ Seitengröße sind $\frac{np}{2}$ byte verschwendet.
+ \item Ein weiterer Faktor bei der Verschwendung sind Programme. Jedes Programm benötigt mindestens
+ eine volle Seite unabhängig von der eigentlichen größe des Programms. Auch hier gilt: je kleiner
+ die Seitengröße gewählt ist desto geringer ist der verschwendete Platz im Speicher.
+\end{itemize}
+Für große Seiten hingegen spricht:
+\begin{itemize}
+ \item Große Programme bzw. großer Arbeitsspeicher hingegen sprechen für große Seiten.
+ Ein 32KiB Programm benötigt lediglich vier Seiten á 8 KiB, aber 64 Seiten bei 512 byte größe pro Seite. 
+ 
+ Viele Seiten sind aus 2 Gründen negativ. Zum einen wird der Arbeitsspeicher in der Regel Seitenweise
+ befüllt was viel Zeit in Anspruch nimmt wenn viele Seiten geladen werden sollen.
+ Zum anderen benötigen kleine Seiten bei großen Arbeitsspeicher eine große Pagetable. Je nach System
+ kann es nötig sein das die Pagetable für jede Bewegung einer Seite in ein CPU Register geladen werden
+ muss.
+
+\end{itemize}
+Vgl. jeweils Tannenbaum.\footnote[3]{Andrew S. Tanenbaum, Modern Operating Systems, 3rd Edition, pg. 219 ff.}
+
+\subsection{optimale Seitengröße II}
+
+Bei den gegebenen Werten\footnote{$p =4$MiB durchschnittl. Prozessgröße und $L=8$B Länge eines Pagetableeintrags.}
+ist die Anzahl an Seiten $S$ pro Prozeß in etwa $S = \frac pA$, wobei $A$ die Seitengröße ist. Jeder Prozeß benötigt
+also im Schnitt $\frac {Lp}A$ byte der Pagetable. Verlust an Speicher durch 
+sie letzte Seite ist $\frac A 2$. Wir haben also insgesamt einen overhead $o$ von:
+$$o= \frac {Lp} A + \frac A 2$$
+$\frac {Lp}A$ ist groß bei kleiner Seitengröße. Bei großer Seitengröße allerdings wird $\frac A2$ groß. Für die optimale
+Seitengröße $A_{opt.}$ ergibt sich daraus:
+$$A_{opt.} = \sqrt{2pL} = \sqrt{2\cdot (1024^2\text{Byte})(8\text{B})} = \sqrt{16\cdot 1024^2 \text{B}^2} = 4\cdot 1024 \text{B} = 4\text{KiB} $$
+
+Vgl. auch hier je Tannenbaum.\footnotemark[3]
+
+\aufgabe{Seitenersetzungsalorithmen}
+
+\subsection{Seitenspeicher}
+
+\subsubitem{optimaler Seitenersetzungsalorithmus:}
+
+ \begin{tabular}{c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c}
+ $t$ 		& 1 	& 2 	& 3 	& 4 	& 5 	& 6 	& 7 	& 8 	& 9 	& 10 			& 11 		& 12 		& 13 		& 14 		& 15 \\\hline 
+ Seite 		& 1 	& 2 	& 3 	& 4 	& 5 	& 6 	& 1 	& 3 	& 1 	&  6 			&  3 		&  5 		&  4 		&  2 		&  1 \\\hline 
+ Fault		& X 	& X 	& X 	& X 	& X 	& X 	& . 	& . 	& . 	&  . 			&  . 		&  X 		&  X 		&  X 		&  X \\\hline 
+ Seiten		& 1 	& 1 	& 1 	& 1 	& 1 	& 1 	& 1 	& 1 	& 1 	&  1 			&  1 		&  1 		&  1 		&  1 		&  1 \\
+ im		&   	& 2 	& 2 	& 4 	& 5 	& 6 	& 6 	& 6 	& 6 	&  6 			&  6 		&  5 		&  5 		&  5 		&  5 \\
+ Speicher	&   	&   	& 3 	& 3 	& 3 	& 3 	& 3 	& 3 	& 3 	&  3 			&  3 		&  3 		&  4 		&  2 		&  2 \\\hline
+ $p_i^*$ der	& $5_1$ & $4_1$ & $3_1$ & $1_1$ & $1_1$	& $0_1$ & $1_1$ & $0_1$ & $5_1$ &  $4_1$ 		&  $3_1$ 	&  $2_1$ 	&  $1_1$ 	&  $0_1$ 	&  $\infty_1$ \\
+ jeweiligen	&   	& $11_2$& $10_2$& $9_4$	& $6_5$ & $3_6$ & $2_6$ & $1_6$ & $0_6$ &  $\infty_6^{**}$ 	&  $\infty_6$ 	&  $\infty_5$ 	&  $\infty_5$ 	& $\infty_5$ 	&  $\infty_5$ \\
+ Seite		&   	&   	& $4_3$	& $3_3$	& $2_3$ & $1_3$ & $0_3$ & $2_3$ & $1_3$ &  $0_3$ 		&  $\infty_3$ 	&  $\infty_3$ 	&  $\infty_4$ 	& $\infty_2$ 	&  $\infty_2$ \\
+ \end{tabular}
+ 
+ $*$ das $i$ von $p_i$ bezieht sich auf die Seite, der Wert von $p$ auf die Anzahl der Befehle die noch
+ auszuführen sind bis die Seite wieder benutzt wird.
+ 
+ $**$ Das Zeichen $\infty$ wird in diesem Zusammenhang benutzt um ``nicht in vorhersehbarer Zeit'' auszudrücken.
+ \subsubitem{LRU-Algorithmus:}
+
+ \begin{tabular}{c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|c}
+ $t$ 		& 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 \\\hline 
+ Seite 		& 1 & 2 & 3 & 4 & 5 & 6 & 1 & 3 & 1 &  6 &  3 &  5 &  4 &  2 &  1 \\\hline 
+ Fault		& X & X & X & X & X & X & X & X & . &  . &  . &  X &  X &  X &  X \\\hline 
+ Seiten		& 1 & 1 & 1 & 4 & 4 & 4 & 1 & 1 & 1 &  1 &  1 &  1 &  1 &  2 &  2 \\
+ im		&   & 2 & 2 & 2 & 5 & 5 & 5 & 3 & 3 &  3 &  3 &  5 &  5 &  5 &  1 \\
+ Speicher	&   &   & 3 & 3 & 3 & 6 & 6 & 6 & 6 &  6 &  6 &  6 &  4 &  4 &  4 \\\hline
+ Liste		& 1 & 2 & 3 & 4 & 5 & 6 & 1 & 3 & 1 &  6 &  1 &  5 &  4 &  2 &  1 \\
+ der ehem.	&   & 1 & 2 & 3 & 4 & 5 & 6 & 1 & 3 &  1 &  6 &  1 &  5 &  4 &  2 \\
+ Seiten$^{***}$	&   &   & 1 & 2 & 3 & 4 & 5 & 6 & 6 &  3 &  3 &  6 &  1 &  5 &  4 \\
+ \end{tabular}
+ 
+ $***$ älteste unten, jüngste oben.
+
+ \subsection{optimaler Seitenersetzungsalorithmus}
+ 
+ Der optimale Seitenersetzungsalorithmus kommt in realen Betriebssystem nicht zum Einsatz,
+ da in der Regel nicht bekannt ist wann welche Seite wieder gebraucht wird. Die Reihenfolge in der Prozesse
+ ausgeführt werden ist in der Regel nicht deterministisch. Die Reihenfolge der Ausführung der Prozesse und
+ damit auch der Abstand zur nächsten Verwendung einer bestimmten Seite kann sich ständig ändern.
+
+ \subsection{Last Recently Used?}
+ 
+ Last recently used übersetzt sich zu ``zuletzt kurz zuvor genutzt'' im Gegensatz zu least recently used
+ (``am wenigsten kurz zuvor genutzt''). Das würde als Seitenersetzungsalorithmus bedeuten das genau die
+ Seite die eben noch benutzt wurde aus dem Speicher entfernt wird falls ein Pagefault auftritt.
+ Das erscheint intuitiv unsinnig, da Programme in der Regel längere Zeit ausgeführt werden. ``Last recently
+ used'' würde nur Sinn machen jede Seite nur sehr selten - idealerweise nur einmal genutzt - wird.
+ 
+\aufgabe{Synchronisation}
+
+\begin{enumerate}
+	\item
+
+\begin{verbatim}
+semaphore W=1, Mutex=1;
+NumberOfActiveReaders=0;
+ 
+processWriter()
+{
+    wait(W);
+    // Writing is done
+    signal(W);
+}
+ 
+processReader()
+{
+    wait(Mutex);
+        NumberOfActiveReaders++;
+        if (NumberOfActiveReaders == 1)
+            wait(W);
+    signal(Mutex);
+    // Do the Reading
+    // (Critical Section Area)
+    wait(Mutex);
+        NumberOfActiveReaders--;
+        if (NumberOfActiveReaders == 0)
+            signal(W);
+    signal(Mutex);
+}
+
+\end{verbatim}
+
+\item 
+Write-Prozesse werden benachteiligt, da theoretisch beliebig viele Read-Prozesse ankommen können und der Write-Prozess nie ausgeführt wird. Eine Lösung wäre sicherzustellen, dass kein Prozess aussterben darf (weder Write- noch Read-Prozesse).
+
+\end{enumerate}
+
+
+\end{document}
