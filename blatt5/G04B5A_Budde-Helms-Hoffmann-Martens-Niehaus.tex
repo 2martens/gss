@@ -1,0 +1,112 @@
+\documentclass[ngerman]{fbi-aufgabenblatt}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{paralist}
+%\usepackage{blockgraph}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{textcomp}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       % keyword style
+  stringstyle=\color{mymauve},     % string literal style
+}
+
+% Folgende Angaben bitte Anpassen !!!
+
+\renewcommand{\Aufgabenblatt}{5}
+\renewcommand{\Gruppe}{G04}
+\renewcommand{\KleinGruppe}{A}
+\renewcommand{\Teilnehmer}{Budde, Helms, Hoffmann, Martens, Niehaus}
+
+\begin{document}
+
+\aufgabe{Zentrale Begriffe der Kryptographie}
+
+\subsection{Unterschiedliche Chiffren}
+
+	Ein symmetrisches Kryptosystem wie z.B. AES zeichnet sich dadurch aus, dass der Schlüssel sowohl für das Ver- als auch für das Entschlüsseln der geheimen Nachricht verwendet wird, oder sich der unbekannte Schlüssel durch die Kenntniss über  den anderen Schlüssel leicht reproduzieren lässt. Entsprechend benötigen sowohl Sender, als auch Empfänger den geheimen Schlüssel bzw. ein gemeinsames Geheimnis (wie z.B. ein Password).
+	
+	Ein Asymmetrisches Kryptosystem wie z.B. RSA zeichnet sich dadurch aus, dass es einen privaten und einen öffentlichen Schlüssel gibt. Der private Schlüssel wird zum entschlüsseln und signieren einer Nachricht verwendet. Der öffentliche Schlüssel wird	zum Verschlüsseln und zum Prüfen der Signatur verwendet. Hierbei kommt das Signieren einem Verschlüsseln mit dem privaten Schlüssel gleich.
+	
+\subsection{Hybride Kryptosysteme}
+	\begin{enumerate}
+	 \item Alice wird ein hybrides Kryptosystem verwenden, wenn die zu übermittelnde Nachricht deutlich länger als wenige Bit ist.
+	 	
+	 \item Alice wählt sich zunächst einen sog. Sitzungsschlüssel (für eine symmetrische Verschlüsselung) aus, der dann mithilfe von Bobs öffentlichem Schlüssel verschlüsselt wird (also asymmetrisch). Außerdem verschlüsselt sie die Nachricht mit dem Sitzungsschlüssel. Beides sendet sie nun zusammen an Bob.
+	 	
+	 \item Die übertragende Nachricht enthält einmal den (asymmetrisch) verschlüsselten Sitzungsschlüssel und die (symmetrisch) verschlüsselte Nachricht, wobei der Sitzungsschlüssel mit Bobs öffentlichem Schlüssel verschlüsselt wurde und die Nachricht mit dem Sitzungsschlüssel.
+	\end{enumerate}
+	
+
+\aufgabe{Parkhaus}
+
+\subsection{Funktionsweise}
+\subsection{Sicherheitsanalyse}
+
+Das System weist einige Schwächen auf. Die wohl offensichtlichste ist der Barcode von den Unternehmen, die Rabatte auf den Parkpreis gewähren. Es reicht somit aus sich den Barcode dieses Unternehmens zu holen (bleibt immer gleich) und dann zu vervielfältigen. Anschließend muss man den Barcode noch an die vorgesehene Stelle kleben und fertig ist das manipulierte Ticket.
+
+Verwendet man das Angreifermodell, so ergibt sich daraus zwangsläufig, dass es nur gegen Outsider schützen kann. Denn Insider könnten sogar ohne Manipulation von gedruckten Tickets, sich gleich selber die echten Tickets mit den Barcodes versehen.
+
+Ebenso darf ein Angreifer nur auf die gedruckten Tickets selber Zugriff haben. Zudem darf sich der Angreifer nur beobachtend verhalten, denn wie oben geschildert kann das System mit einfachsten Mitteln ausgetrickst werden. Ein verändernder Angreifer hätte somit leichtes Spiel.
+
+Schließlich darf der Angreifer nur begrenzte Rechenkapazität haben, obgleich dies bei diesem Szenario eher unwichtig ist.
+\subsection{Umsetzung mit kryptographischen Techniken}
+
+Jedes der Unternehmen mit Rabatten auf die Parkkosten würde den öffentlichen Schlüssel des Parksystems bekommen und dann das Datum des Rabattes, die Nummer des Tickets, sowie die ID des Unternehmens im Einkaufszentrum damit verschlüsseln. Beim Kassenautomaten würde nun der Barcode (welcher somit je Tag, Ticket und Unternehmen unterschiedlich wäre) mithilfe des privaten Schlüssels des Parksystems entschlüsselt werden und dann das Datum, die Ticketnummer und die ID überprüft werden. Wenn alles stimmt, dann werden die Rabatte gewährt. Intern vermerkt sich der Kassenautomat, dass die Rabatte für die Ticketnummer jetzt vergeben wurden. Würde nun versucht werden das Ticket zu kopieren und damit das System auszutricksen, dann würde das Ticket eingezogen und ein Betrugsfall festgestellt werden.
+
+Angreifer haben nun keine realistische Chance mehr das Ticket auf eine ähnlich einfache Weise zu manipulieren. Selbst wenn bekannt wäre, dass die ID und das Datum, sowie die Ticketnummer verwendet werden, könnten Angreifer den Barcode nicht duplizieren. Denn der öffentliche Schlüssel wäre dem Angreifer in diesem Fall unbekannt.
+
+\aufgabe{Authentifizierungsprotokolle}
+
+\subsection{Verschlüsselte Passwort-Übermittlung}
+Ein passiver Angreifer wird nach mehreren Login des Unsers merken, dass $E_k(u,p)$ als Authentifikation konstant bleibt, da User, Passwort und insbesondere $k$ hier als konstant festgelegt sind.\\
+Ein aktiver Angreifer könnte sich diese Beobachtung zu Nutzen machen, indem er sich unter der Verwendung des bekannten $E_k(u,p)$ als der oben genannte User ausgibt.
+\subsection{Authentifikationssystem auf Basis indeterministischer symmetrischer Verschlüsselung}
+Die Maßnahme verhindert nur, dass nach einmaligem Abfangen von $c$ der Zugang sofort gewährt ist, da der Server die Authentifiaktion zeitnahem Mehrfachauftreten eines gleiche $r$ die Authentifikation verweigern kann. Ein Angreifer wird jedoch nach mehreren beobachteten Logins feststellen, dass $E_k(u,p)$ als Konstante am Ende von $c$ vorhanden ist. Er könnte so versuchen mit zufälligen (nicht bereits zeitnah verwendeten) Zahlen vor $E_k(u,p)$ eine Authentifikation als User zu erlangen, was ihm gelingen würde.
+\subsection{Challenge-Response-Authentifizierung}
+\subsection{Sichere Challenge-Response-Authentifizierung}
+
+\aufgabe{``Mensch ärgere Dich nicht'' über das Telefon}
+
+\aufgabe{RSA-Verfahren}
+
+\subsection{Grundlagen}
+\subsection{Anwendung}
+Zunächst stellen wir fest:
+\begin{align*}
+N:= pq= 109309 ~text{ und }~~~ ed \text{ mod }(p-1)(q-1)=1 \Rightarrow d\in \{ 108640n+3243 \mid n \in \mathbb{Z} \} 
+\end{align*}
+Zur Einfachheit sei also $d= 3243$ gewählt. Nun lässt sich eine verschlüsselte Zahl $x$ durch 
+\begin{align*}
+x \mapsto x^d \text{ mod }N
+\end{align*}
+entschlüsseln. Für die gegebenen Zahlen ergibt dies:
+\begin{align*}
+& 70,~ 117,~ 101,~ 114,~ 32,~ 100,~ 105,~ 101,~ 32,~ 71,~ 83,~ 83,~ 45,~ 75,~ 108,~ 97,~ 117,~ 115,~ 117,~ 114,~ 32,~ 115,~
+\\& 105,~ 110,~ 100,~ 32,~ 102,~ 111,~ 108,~ 103,~ 101,~ 110,~ 100,~ 101,~ 32,~ 84,~ 104,~ 101,~ 109,~ 101,~ 110,~ 32,~ 
+\\& 119,~ 105,~ 99,~ 104,~ 116,~ 105,~ 103,~ 58,~ 32,~ 83,~ 99,~ 104,~ 117,~ 116,~ 122,~ 122,~ 105,~ 101,~ 108,~ 101,~ 44,~ 
+\\& 32,~ 65,~ 110,~ 103,~ 114,~ 101,~ 105,~ 102,~ 101,~ 114,~ 109,~ 111,~ 100,~ 101,~ 108,~ 108,~ 101,~ 44,~ 32,~ 82,~ 97,~ \\& 105,~ 110,~ 98,~ 111,~ 119,~ 32,~ 84,~ 97,~ 98,~ 108,~ 101,~ 115,~ 44,~ 32,~ 100,~ 105,~ 101,~ 32,~ 40,~ 85,~ 110,~   \\& 45,~ 41,~ 83,~ 105,~ 99,~ 104,~ 101,~ 114,~ 104,~ 101,~ 105,~ 116,~ 32,~ 118,~ 111,~ 110,~ 32,~ 80,~ 97,~ 115,~ 115,~  \\& 119,~ 111,~ 101,~ 114,~ 116,~ 101,~ 114,~ 110,~ 32,~ 117,~ 110,~ 100,~ 32,~ 100,~ 97,~ 122,~ 117,~ 103,~ 101,~ 104,~  \\& 111,~ 101,~ 114,~ 105,~ 103,~ 101,~ 32,~ 65,~ 110,~ 103,~ 114,~ 105,~ 102,~ 102,~ 101,~ 44,~ 32,~ 90,~ 117,~ 103,~ 97,~
+\\& 110,~ 103,~ 115,~ 45,~ 32,~ 117,~ 110,~ 100,~ 32,~ 90,~ 117,~ 103,~ 114,~ 105,~ 102,~ 102,~ 115,~ 107,~ 111,~ 110,~  \\& 116,~ 114,~ 111,~ 108,~ 108,~ 101,~ 44,~ 32,~ 66,~ 105,~ 111,~ 109,~ 101,~ 116,~ 114,~ 105,~ 115,~ 99,~ 104,~ 101,~  \\& 32,~ 86,~ 101,~ 114,~ 102,~ 97,~ 104,~ 114,~ 101,~ 110,~ 44,~ 32,~ 84,~ 105,~ 109,~ 105,~ 110,~ 103,~ 45,~ 65,~ 116,~  \\&
+ 116,~ 97,~ 99 ,~107,~ 32,~ 117,~ 110,~ 100,~ 32 ,~80 ,~111 ,~119 ,~101,~ 114,~ 45,~ 65,~ 110,~ 97,~ 108,~ 121,~ 115,~  \\& 105,~ 115,~ 44 ,~32,~ 71,~ 114 ,~117,~ 110,~ 100,~ 108,~ 97,~ 103,~ 101,~ 110,~ 32,~ 100,~ 101,~ 114,~ 32,~ 75,~ 114,~  \\& 121,~ 112,~ 116,~ 111,~ 103,~ 114,~ 97,~ 112,~ 104,~ 105 ,~101,~ 44,~ 32,~ 65,~ 117,~ 116,~ 104,~ 101,~   \end{align*}
+\begin{align*}
+& 110,~ 116,~ 105,~ 102,~ 105,~ 107,~ 97 ,~116 ,~105 ,~111,~ 110,~ 115,~ 112,~ 114,~ 111,~ 116,~ 111,~ 107,~ 111,~ 108,~  \\&108,~ 101,~ 44,~ 32,~ 100,~ 97,~ 115,~ 32,~ 82,~ 83,~ 65,~ 45,~ 86,~ 101,~ 114,~ 102,~ 97,~ 104,~ 114,~ 101,~ 110,~ 32,~  \\&117,~ 110,~ 100,~ 32,~ 110,~ 97,~ 116,~ 117,~ 101,~ 114,~ 108,~ 105,~ 99,~ 104,~ 32,~ 97,~ 108,~ 108,~ 101,~ 32,~ 97,~ \\&110,~ 100,~ 101,~ 114,~ 101,~ 110,~ 32,~ 73,~ 110,~ 104,~ 97,~ 108,~ 116,~ 101,~ 44,~ 32,~ 100,~ 105,~ 101,~ 32,~ 119,~ \\&105,~ 114,~ 32,~ 105,~ 110,~ 32,~ 100,~ 101,~ 114,~ 32,~ 85,~ 101,~ 98,~ 117,~ 110,~ 103,~ 32,~ 117,~ 110,~ 100,~ 32 ,~ \\&100,~ 101,~ 114,~ 32,~ 86,~ 111,~ 114,~ 108,~ 101,~ 115,~ 117,~ 110,~ 103,~ 32,~ 98,~ 101,~ 104,~ 97 ,~ 110,~ 100,~  \\&101,~ 108,~ 116,~ 32,~ 104,~ 97,~ 98,~ 101,~ 110,~ 32,~ 58,~ 45,~ 41 
+\end{align*}
+Die Übersetzung via ASCII liefert: \\~\\
+Fuer die GSS-Klausur sind folgende Themen wichtig: Schutzziele, Angreifermodelle, Rainbow Tables, die (Un-)Sicherheit von Passwoertern und dazugehoerige Angriffe, Zugangs- und Zugriffskontrolle, Biometrische Verfahren, Timing-Attack und Power-Analysis, Grundlagen der Kryptographie, Authentifikationsprotokolle, das RSA-Verfahren und natuerlich alle anderen Inhalte, die wir in der Uebung und der Vorlesung behandelt haben :-)  \\~\\
+Die Nachricht wurde anscheinend richtig entschlüsselt.
+\subsection{Sichere Implementierung}
+
+\end{document}
